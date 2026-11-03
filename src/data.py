@@ -1,4 +1,4 @@
-"""Carga e limpeza dos dados de cesta básica (ICB_DADOS_2026.xlsx).
+"""Carga e limpeza dos dados de cesta basica (ICB_DADOS_2026.xlsx).
 
 Uso:
     from src.data import carregar_limpo, serie_produto_mes, painel_loja_produto_mes
@@ -54,7 +54,7 @@ def carregar_bruto() -> pd.DataFrame:
 def limpar(df: pd.DataFrame, remover_outliers: bool = False, log: bool = True) -> pd.DataFrame:
     """Aplica as regras de limpeza, na ordem, e imprime quantas linhas cada uma remove.
 
-    Outliers são apenas marcados por padrão (ver RAZAO_OUTLIER)."""
+    Outliers sao apenas marcados por padrao (ver RAZAO_OUTLIER)."""
     def passo(nome, antes, depois):
         if log:
             print(f"[limpeza] {nome}: {antes - depois} linhas removidas ({depois} restantes)")
@@ -63,24 +63,24 @@ def limpar(df: pd.DataFrame, remover_outliers: bool = False, log: bool = True) -
     df["produto"] = df["produto"].str.strip().replace(ALIASES)
     df["loja"] = df["loja"].str.strip()
 
-    # Dez/2024 foi carregado duas vezes (923 de 1846 linhas são cópias exatas);
-    # nos demais meses, linhas idênticas são cotações legítimas e ficam.
+    # Dez/2024 foi carregado duas vezes (923 de 1846 linhas sao copias exatas);
+    # nos demais meses, linhas identicas sao cotacoes legitimas e ficam.
     n = len(df)
     copia = df.duplicated(keep="first") & (df["mes"] == DUPLICADO_MES)
     df = df[~copia]
-    passo(f"duplicação de {DUPLICADO_MES:%m/%Y}", n, len(df))
+    passo(f"duplicacao de {DUPLICADO_MES:%m/%Y}", n, len(df))
 
     n = len(df)
     df = df[(df["preco"] > 0) & (df["quantidade"] > 0)]
-    passo("preço/quantidade inválidos", n, len(df))
+    passo("preco/quantidade invalidos", n, len(df))
 
-    # Outlier relativo à mediana do mesmo produto no mesmo mês (pega R$ 999 da banana).
-    # Só marca (coluna `outlier`); quem consome decide se filtra (remover_outliers=True).
+    # Outlier relativo a mediana do mesmo produto no mesmo mes (pega R$ 999 da banana).
+    # So marca (coluna `outlier`); quem consome decide se filtra (remover_outliers=True).
     med = df.groupby(["produto", "mes"])["ppk"].transform("median")
     df["outlier"] = ~(df["ppk"] / med).between(*RAZAO_OUTLIER)
     if log:
         print(f"[limpeza] outliers marcados (PPK fora de {RAZAO_OUTLIER[0]:.2f}x-{RAZAO_OUTLIER[1]:.0f}x "
-              f"da mediana produto-mês): {int(df['outlier'].sum())}")
+              f"da mediana produto-mes): {int(df['outlier'].sum())}")
     if remover_outliers:
         n = len(df)
         df = df[~df["outlier"]]
@@ -108,7 +108,7 @@ def carregar_limpo(remover_outliers: bool = False, log: bool = False) -> pd.Data
 
 
 def painel_loja_produto_mes(df: pd.DataFrame, remover_outliers: bool = False) -> pd.DataFrame:
-    """Uma linha por (loja, produto, mês): mediana do PPK entre as cotações do mês."""
+    """Uma linha por (loja, produto, mes): mediana do PPK entre as cotacoes do mes."""
     if remover_outliers:
         df = df[~df["outlier"]]
     return (
@@ -118,7 +118,7 @@ def painel_loja_produto_mes(df: pd.DataFrame, remover_outliers: bool = False) ->
 
 
 def serie_produto_mes(df: pd.DataFrame, remover_outliers: bool = False) -> pd.DataFrame:
-    """Série nacional: mediana mensal do PPK por produto. Colunas = produtos, índice = mês."""
+    """Serie nacional: mediana mensal do PPK por produto. Colunas = produtos, indice = mes."""
     if remover_outliers:
         df = df[~df["outlier"]]
     return df.groupby(["mes", "produto"])["ppk"].median().unstack("produto")
