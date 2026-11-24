@@ -1,0 +1,11 @@
+cenario,modelo,1,3,6
+com outliers,ETS amortecido,7,4,6
+com outliers,MLP,0,1,5
+com outliers,Media movel (3),5,4,7
+com outliers,Naive,0,0,0
+com outliers,Random Forest,4,6,4
+sem outliers,ETS amortecido,9,4,6
+sem outliers,MLP,0,1,5
+sem outliers,Media movel (3),5,3,7
+sem outliers,Naive,0,0,0
+sem outliers,Random Forest,3,6,6
