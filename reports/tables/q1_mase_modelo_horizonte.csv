@@ -1,0 +1,11 @@
+cenario,modelo,1,3,6
+com outliers,ETS amortecido,1.292,1.998,3.126
+com outliers,MLP,1.957,3.005,3.758
+com outliers,Media movel (3),1.438,2.096,2.734
+com outliers,Naive,1.298,1.903,2.679
+com outliers,Random Forest,1.392,2.06,3.162
+sem outliers,ETS amortecido,1.305,2.022,3.149
+sem outliers,MLP,1.99,3.039,3.757
+sem outliers,Media movel (3),1.444,2.112,2.752
+sem outliers,Naive,1.309,1.918,2.7
+sem outliers,Random Forest,1.403,2.084,3.176
